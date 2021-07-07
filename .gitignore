@@ -1,4 +1,7 @@
+.DS_Store
+.idea/*
 *.pyc
+enron_mail_20150507.tar.gz
 enron_mail_20110402.tgz
 enron_mail_20110402/
 enron_mail_20150507.tgz
@@ -8,3 +11,4 @@ text_learning/your_email_authors.pkl
 my_classifier.pkl
 my_dataset.pkl
 my_feature_list.pkl
+venv/*
