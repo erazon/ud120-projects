@@ -23,6 +23,7 @@ from sklearn import cross_validation
 features_train, features_test, labels_train, labels_test = cross_validation.train_test_split(word_data, authors, test_size=0.1, random_state=42)
 
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics import accuracy_score
 vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5,
                              stop_words='english')
 features_train = vectorizer.fit_transform(features_train)
@@ -38,6 +39,21 @@ labels_train   = labels_train[:150]
 
 
 ### your code goes here
+from sklearn.tree import DecisionTreeClassifier
+clf = DecisionTreeClassifier()
+clf.fit(features_train, labels_train)
+pred = clf.predict(features_test)
+print "accuracy: ", accuracy_score(labels_test, pred)
 
+problemWordIndices = []
 
+importances = clf.feature_importances_
+print importances
+for index in range(len(importances)):
+    if importances[index] > 0.2:
+        print "index:", index
+        problemWordIndices.append(index)
+        print "importance:", importances[index]
 
+for index in problemWordIndices:
+    print "problem word:", vectorizer.get_feature_names()[index]

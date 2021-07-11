@@ -13,7 +13,7 @@ import numpy
 import sys
 sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
-
+from sklearn.preprocessing import MinMaxScaler
 
 
 
@@ -51,10 +51,23 @@ for person in data_dict:
     if data_dict[person]['salary'] != 'NaN':
         salary.append(data_dict[person]['salary'])
 
-exercised_stock_options.sort()
-print "Max and min exercised_stock_options: ", exercised_stock_options[-1], exercised_stock_options[0]
-salary.sort()
-print "Max and min salary: ", salary[-1], salary[0]
+print "Max and min exercised_stock_options: ", max(exercised_stock_options), min(exercised_stock_options)
+print "Max and min salary: ", max(salary), min(salary)
+
+salary = [min(salary), 200000.0, max(salary)]
+exercised_stock_options = [min(exercised_stock_options), 1000000.0, max(exercised_stock_options)]
+print('Salary: {}'.format(salary))
+print('Exercised stock options: {}'.format(exercised_stock_options))
+
+salary = numpy.array([[e] for e in salary])
+exercised_stock_options = numpy.array([[e] for e in exercised_stock_options])
+
+scalar_salary = MinMaxScaler()
+scalar_stock = MinMaxScaler()
+rescaled_salary = scalar_salary.fit_transform(salary)
+rescaled_stock = scalar_stock.fit_transform(exercised_stock_options)
+print('Rescaled salary: {}'.format(rescaled_salary))
+print('Rescaled exercised stock options: {}'.format(rescaled_stock))
 
 ### the input features we want to use 
 ### can be any key in the person-level dictionary (salary, director_fees, etc.) 

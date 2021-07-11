@@ -7,6 +7,9 @@ import sys
 
 sys.path.append( "../tools/" )
 from parse_out_email_text import parseOutText
+from sklearn.feature_extraction import text
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 """
     Starter code to process the emails from Sara and Chris to extract
@@ -41,20 +44,30 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
     for path in from_person:
         ### only look at first 200 emails when developing
         ### once everything is working, remove this line to run over full dataset
-        temp_counter += 1
+        # temp_counter += 1
         if temp_counter < 200:
             path = os.path.join('..', path[:-1])
-            print path
+            # print path
             email = open(path, "r")
 
             ### use parseOutText to extract the text from the opened email
+            parsed_text = parseOutText(email)
 
             ### use str.replace() to remove any instances of the words
             ### ["sara", "shackleton", "chris", "germani"]
+            for item in ["sara", "shackleton", "chris", "germani"]:
+                parsed_text = parsed_text.replace(item, "")
+
+            parsed_text = parsed_text.replace("  ", " ")
 
             ### append the text to word_data
+            word_data.append(parsed_text.strip())
 
             ### append a 0 to from_data if email is from Sara, and 1 if email is from Chris
+            if name == "Sara":
+                from_data.append(0)
+            else:
+                from_data.append(1)
 
 
             email.close()
@@ -66,10 +79,12 @@ from_chris.close()
 pickle.dump( word_data, open("your_word_data.pkl", "w") )
 pickle.dump( from_data, open("your_email_authors.pkl", "w") )
 
-
+print(word_data[152])
 
 
 
 ### in Part 4, do TfIdf vectorization here
-
-
+vectorizer = TfidfVectorizer(stop_words=text.ENGLISH_STOP_WORDS)
+x = vectorizer.fit_transform(word_data)
+print len(vectorizer.get_feature_names())
+print vectorizer.get_feature_names()[34597]
